@@ -3,12 +3,12 @@ const $observe = document.getElementById('observe');
 const API = 'https://rickandmortyapi.com/api/character/';
 //const API = 'https://us-central1-escuelajs-api.cloudfunctions.net/characters'
 
+
 const getData = api => {
   fetch(api)
     .then(response => response.json())
-    .then(response => {    
-      localStorage.setItem("next_fetch", response.info.next);
-      console.log(response);
+    .then(response => {   
+      setStorage(response.info.next); 
       const characters = response.results;
       let output = characters.map(character => {
         return `
@@ -29,7 +29,6 @@ const getData = api => {
 async function loadData() {
   let url=localStorage.getItem("next_fetch");
   if(url){
-    console.log(` Se esta consultando ${url}`);
     getData(url);  
   } 
   else{
@@ -41,7 +40,6 @@ async function loadData() {
     }
   }
 }
-
 const intersectionObserver = new IntersectionObserver(entries => {
   if (entries[0].isIntersecting) {
     loadData();
@@ -49,5 +47,8 @@ const intersectionObserver = new IntersectionObserver(entries => {
 }, {
   rootMargin: '0px 0px 100% 0px',
 });
-
+function setStorage(value){
+  localStorage.setItem("next_fetch", value);
+}
+document.addEventListener("beforeunload", setStorage(''));
 intersectionObserver.observe($observe);
