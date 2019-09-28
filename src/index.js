@@ -7,8 +7,12 @@ const API = 'https://rickandmortyapi.com/api/character/';
 const getData = api => {
   fetch(api)
     .then(response => response.json())
-    .then(response => {   
-      setStorage(response.info.next); 
+    .then(response => {
+      if(response.info.next){
+        setStorage(response.info.next); 
+      } else{
+        setFinish();
+      }  
       const characters = response.results;
       let output = characters.map(character => {
         return `
@@ -47,6 +51,10 @@ const intersectionObserver = new IntersectionObserver(entries => {
 }, {
   rootMargin: '0px 0px 100% 0px',
 });
+function setFinish(){
+  alert("Lo sentimos, Ya no hay Personajes");
+  intersectionObserver.unobserve($observe);
+}
 function setStorage(value){
   localStorage.setItem("next_fetch", value);
 }
